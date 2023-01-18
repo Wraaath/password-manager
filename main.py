@@ -139,5 +139,3 @@ def create_function():
 
 # Caller programmet
 manager_function(None, None, None, connection)
-
-
