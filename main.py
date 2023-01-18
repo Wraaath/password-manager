@@ -72,10 +72,15 @@ from tkinter.font import BOLD, ITALIC
 
 sg.theme("BrownBlue")
 
-def manager_function(website, username, password, connection):
-    headings = ['ID', 'Website', 'Username', 'Password']
+def fetch_data(connection):
     select_users = "SELECT * FROM logins"
     data = execute_read_query(connection, select_users)
+    return data
+
+def manager_function(website, username, password, connection):
+    headings = ['ID', 'Website', 'Username', 'Password']
+    data = fetch_data(connection)
+
     login_layout = [
         [sg.Text("My Password Manager", font=("", 20, BOLD))],
         [sg.Button("Create new password")],
@@ -98,9 +103,19 @@ def manager_function(website, username, password, connection):
         elif event == "Update":
             manager_window["-list1-"].update("Website: " + website + "\n" + "Username: " + username + "\n" + "Password: " + password)
         if event == "Delete":
-            index = values["-TABLE-"]
-            print(index)
-            print([data[index] for index in values["-TABLE-"]])
+            row = values["-TABLE-"]
+            row = row[0]
+            print("index", row)
+            number_ID = data[row]
+            print("numberid", number_ID)
+            nummer = str(number_ID[0])
+            print("nummer", nummer)
+            delete_logins = "DELETE FROM logins WHERE id = "+nummer+""
+            print("boop", delete_logins)
+            execute_query(connection, delete_logins)
+            data = fetch_data(connection)
+            manager_window["-TABLE-"].update(data)
+            
         
 
     manager_window.close()
