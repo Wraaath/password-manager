@@ -78,9 +78,10 @@ def manager_function(website, username, password, connection):
     login_layout = [
         [sg.Text("My Password Manager", font=("", 20, BOLD))],
         [sg.Button("Create new password")],
-        [sg.Table(data, headings=headings, justification="left", key="-TABLE-")],
-        [sg.Button("Close")],
-        [sg.Text("", key="-no_username-")], [sg.Text("", key="-different_passwords-")]
+        [sg.Table(values=data, headings=headings, justification="left", key="-TABLE-", enable_events=True)],
+        [sg.Button("Close"), sg.Button("Delete")],
+        [sg.Text("", key="-no_username-")], [sg.Text("", key="-different_passwords-")],
+        
     ]
     
     manager_window = sg.Window("Password Manager.exe", login_layout, size=(600,600))
@@ -95,7 +96,10 @@ def manager_function(website, username, password, connection):
             create_function()
         elif event == "Update":
             manager_window["-list1-"].update("Website: " + website + "\n" + "Username: " + username + "\n" + "Password: " + password)
-            
+        if event == "Delete":
+            index = values["-TABLE-"]
+            print(index)
+            print([data[index] for index in values["-TABLE-"]])
         
 
     manager_window.close()
@@ -115,6 +119,7 @@ def create_function():
 
     while True:
         event, values = create_window.read()
+        print(event)
 
         if event == sg.WIN_CLOSED:
             break
@@ -133,7 +138,8 @@ def create_function():
             """
             execute_query(connection, create_users)
             create_window.close()
-            manager_function(website, username, password, connection) 
+            manager_function(website, username, password, connection)
+
             
     create_window.close()
 
