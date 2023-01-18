@@ -1,4 +1,6 @@
 # Password manager
-blah blah
+School project
 
-### Blah blah
+### Features
+* Connects and stores in MySQL-database
+* Philips pik bliver hård
