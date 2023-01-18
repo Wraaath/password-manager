@@ -13,5 +13,6 @@ School project
 ### Usage
 * Make sure you have all the requirements installed
 * Make sure you have a MySQL-db running on localhost:3306
+* Make sure to name your database "pass-db" or change the name in the code to your liking. 
 
 `python3 main.py`
