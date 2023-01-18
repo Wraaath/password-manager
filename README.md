@@ -9,3 +9,9 @@ School project
 * mysql
 * PySimpleGUI
 * turtle
+
+### Usage
+* Make sure you have all the requirements installed
+* Make sure you have a MySQL-db running on localhost:3306
+
+`python3 main.py`
