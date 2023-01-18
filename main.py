@@ -72,6 +72,9 @@ from tkinter.font import BOLD, ITALIC
 
 sg.theme("BrownBlue")
 
+def error(manager_window):
+    manager_window["-NO_PICK-"].update("")
+
 def fetch_data(connection):
     select_users = "SELECT * FROM logins"
     data = execute_read_query(connection, select_users)
@@ -82,11 +85,11 @@ def manager_function(website, username, password, connection):
     data = fetch_data(connection)
 
     login_layout = [
-        [sg.Text("My Password Manager", font=("", 20, BOLD))],
+        [sg.Push(), sg.Text("My Password Manager", font=("", 20, BOLD)), sg.Push()],
         [sg.Button("Create new password")],
-        [sg.Table(values=data, headings=headings, justification="left", key="-TABLE-", enable_events=True)],
-        [sg.Button("Close"), sg.Button("Delete")],
-        [sg.Text("", key="-no_username-")], [sg.Text("", key="-different_passwords-")],
+        [sg.Table(values=data, headings=headings, justification="c", key="-TABLE-", enable_events=True, expand_x=True, expand_y=True, font=("", 13))],
+        [sg.Button("Close"), sg.Button("Delete Passwords")],
+        [sg.Text("", key="-NO_PICK-", text_color="red", font=("", 12, BOLD))], [sg.Text("", key="-different_passwords-")],
         
     ]
     
@@ -102,20 +105,23 @@ def manager_function(website, username, password, connection):
             create_function()
         elif event == "Update":
             manager_window["-list1-"].update("Website: " + website + "\n" + "Username: " + username + "\n" + "Password: " + password)
-        if event == "Delete":
-            row = values["-TABLE-"]
-            row = row[0]
-            print("index", row)
-            number_ID = data[row]
-            print("numberid", number_ID)
-            nummer = str(number_ID[0])
-            print("nummer", nummer)
-            delete_logins = "DELETE FROM logins WHERE id = "+nummer+""
-            print("boop", delete_logins)
-            execute_query(connection, delete_logins)
-            data = fetch_data(connection)
-            manager_window["-TABLE-"].update(data)
-            
+        if event == "Delete Passwords":
+            try:
+                error(manager_window)
+                row = values["-TABLE-"]
+                row = row[0]
+                print("index", row)
+                number_ID = data[row]
+                print("numberid", number_ID)
+                nummer = str(number_ID[0])
+                print("nummer", nummer)
+                delete_logins = "DELETE FROM logins WHERE id = "+nummer+""
+                print("boop", delete_logins)
+                execute_query(connection, delete_logins)
+                data = fetch_data(connection)
+                manager_window["-TABLE-"].update(data)
+            except IndexError:
+                manager_window["-NO_PICK-"].update("You need to pick a password to delete!")
         
 
     manager_window.close()
