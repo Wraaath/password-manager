@@ -10,6 +10,7 @@ from tkinter.font import BOLD, ITALIC
 # pip3 install mysql
 # pip3 install PySimpleGUI
 # pip3 install turtle
+# hej
 
 
 
