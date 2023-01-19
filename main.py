@@ -4,16 +4,11 @@ from mysql.connector import Error
 from turtle import width
 from tkinter.font import BOLD, ITALIC
 
-
 # -- Requirements
 # pip3 install mysql-connector-python==8.0.29
 # pip3 install mysql
 # pip3 install PySimpleGUI
 # pip3 install turtle
-
-
-
-
 
 # Her forbinder vi til MySQL-databasen som kører med XAMPP på default-porten 3306
 def create_connection(host_name, user_name, user_password, db_name):
@@ -112,13 +107,9 @@ def manager_function(website, username, password, connection):
                 error(manager_window)
                 row = values["-TABLE-"]
                 row = row[0]
-                print("index", row)
                 number_ID = data[row]
-                print("numberid", number_ID)
                 nummer = str(number_ID[0])
-                print("nummer", nummer)
                 delete_logins = "DELETE FROM logins WHERE id = "+nummer+""
-                print("boop", delete_logins)
                 execute_query(connection, delete_logins)
                 data = fetch_data(connection)
                 manager_window["-TABLE-"].update(data)
@@ -126,26 +117,23 @@ def manager_function(website, username, password, connection):
                 manager_window["-NO_PICK-"].update("You need to pick a password to delete!")
         elif event == "Hide/Show":
             if hidden:
-                data2 = []
-                print(data)
-                for i, row in enumerate(data1):
-                    row = list(row)
-                    data2.append(row)
-                    print(row)
-                    print(data[i][3])
-                    print(row[3])
+                showPassData = [] 
+                for i, row in enumerate(hiddenPassData):
                     row[3] = data[i][3]
+                    showPassData.append(row)
                 hidden = False
-                manager_window["-TABLE-"].update(values=data2)
+                manager_window["-TABLE-"].update(values=showPassData)
+                continue
 
             if not hidden:
-                data1 = []
+                hiddenPassData = []
                 for row in data:
                     row = list(row)
-                    data1.append(row)
                     row[3] = "******"
+                    hiddenPassData.append(row)
                 hidden = True
-                manager_window["-TABLE-"].update(values=data1)
+                manager_window["-TABLE-"].update(values=hiddenPassData)
+                continue
                 
         
 
