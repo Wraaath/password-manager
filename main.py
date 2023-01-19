@@ -72,6 +72,8 @@ from tkinter.font import BOLD, ITALIC
 
 sg.theme("BrownBlue")
 
+hidden = False
+
 def error(manager_window):
     manager_window["-NO_PICK-"].update("")
 
@@ -81,12 +83,13 @@ def fetch_data(connection):
     return data
 
 def manager_function(website, username, password, connection):
+    global hidden
     headings = ['ID', 'Website', 'Username', 'Password']
     data = fetch_data(connection)
 
     login_layout = [
         [sg.Push(), sg.Text("My Password Manager", font=("", 20, BOLD)), sg.Push()],
-        [sg.Button("Create new password")],
+        [sg.Button("Create new password"), sg.Push(), sg.Button("Hide/Show")],
         [sg.Table(values=data, headings=headings, justification="c", key="-TABLE-", enable_events=True, expand_x=True, expand_y=True, font=("", 13))],
         [sg.Button("Close"), sg.Button("Delete Passwords")],
         [sg.Text("", key="-NO_PICK-", text_color="red", font=("", 12, BOLD))], [sg.Text("", key="-different_passwords-")],
@@ -94,7 +97,6 @@ def manager_function(website, username, password, connection):
     ]
     
     manager_window = sg.Window("Password Manager.exe", login_layout, size=(600,600))
-
     while True:
         event, values = manager_window.read()
 
@@ -122,6 +124,29 @@ def manager_function(website, username, password, connection):
                 manager_window["-TABLE-"].update(data)
             except IndexError:
                 manager_window["-NO_PICK-"].update("You need to pick a password to delete!")
+        elif event == "Hide/Show":
+            if hidden:
+                data2 = []
+                print(data)
+                for i, row in enumerate(data1):
+                    row = list(row)
+                    data2.append(row)
+                    print(row)
+                    print(data[i][3])
+                    print(row[3])
+                    row[3] = data[i][3]
+                hidden = False
+                manager_window["-TABLE-"].update(values=data2)
+
+            if not hidden:
+                data1 = []
+                for row in data:
+                    row = list(row)
+                    data1.append(row)
+                    row[3] = "******"
+                hidden = True
+                manager_window["-TABLE-"].update(values=data1)
+                
         
 
     manager_window.close()
